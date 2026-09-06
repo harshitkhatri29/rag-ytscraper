@@ -108,7 +108,15 @@ def create_collection():
     client.create_collection(collection_name=COLLECTION_NAME,vectors_config=  VectorParams(size=EMBEDDING_SIZE,distance=Distance.COSINE))
     print(f"Collection : '{COLLECTION_NAME}' created successfully")
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = None
+
+def get_model():
+    global model
+
+    if model is None:
+        model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    return model
 
 def upload_chunks(chunks):
     batch_size = 64
@@ -118,7 +126,7 @@ def upload_chunks(chunks):
 
         texts = [chunk["text"] for chunk in batch]
 
-        embeddings = model.encode(texts)
+        embeddings = get_model().encode(texts)
 
         points = []
 
@@ -157,7 +165,7 @@ def search(query, top_k=5):
     # Step 1: Semantic search
     candidate_count = 10
 
-    query_vector = model.encode(query).tolist()
+    query_vector = get_model().encode(query).tolist()
 
     results = client.query_points(
         collection_name=COLLECTION_NAME,
