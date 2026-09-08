@@ -5,7 +5,7 @@ import Hero from './components/Hero';
 import ResultsView from './components/ResultsView';
 import ErrorView from './components/ErrorView';
 
-const API_URL = 'http://127.0.0.1:8000/ask';
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
 interface Source {
   video_id: string;
